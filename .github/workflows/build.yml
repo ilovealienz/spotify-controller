@@ -1,4 +1,4 @@
-# Builds the 26.3 jar on every push and pull request and uploads it as an artifact.
+# Builds the newest Minecraft version listed in settings.gradle.kts and uploads the jar.
 
 name: build
 on: [pull_request, push]
@@ -17,14 +17,19 @@ jobs:
             25
             21
           distribution: 'temurin'
+      - name: find latest version
+        run: |
+          LATEST=$(sed -n '/val versions = listOf(/,/)/p' settings.gradle.kts | grep -o '"[^"]*-fabric"' | tail -1 | tr -d '"')
+          echo "Building $LATEST"
+          echo "LATEST=$LATEST" >> "$GITHUB_ENV"
       - name: make gradle wrapper executable
         run: chmod +x ./gradlew
-      - name: build 26.3
-        run: ./gradlew :26.3-fabric:build -Porg.gradle.java.installations.fromEnv=JAVA_HOME_21_X64,JAVA_HOME_25_X64
+      - name: build
+        run: ./gradlew :$LATEST:build -Porg.gradle.java.installations.fromEnv=JAVA_HOME_21_X64,JAVA_HOME_25_X64
       - name: capture build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: spotify-controller-26.3
+          name: spotify-controller-${{ env.LATEST }}
           path: |
-            versions/26.3-fabric/build/libs/*.jar
-            !versions/26.3-fabric/build/libs/*-sources.jar
+            versions/${{ env.LATEST }}/build/libs/*.jar
+            !versions/${{ env.LATEST }}/build/libs/*-sources.jar
