@@ -34,6 +34,11 @@ public class IntInputWidget extends StringInputWidget {
 
     @Override
     public Object getValue_() {
-        return Integer.parseInt(getValue());
+        // Empty or out of range input saves as 0
+        try {
+            return Integer.parseInt(getValue());
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 }

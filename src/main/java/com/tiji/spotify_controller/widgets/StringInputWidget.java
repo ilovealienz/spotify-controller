@@ -65,7 +65,7 @@ public class StringInputWidget extends EditBox implements ValueHolder {
 
     @Override
     public void insertText(String text) {
-        if (client.font.width(getValue_() + text) > width - 22) return; // text is too long; probably won't fit
+        if (client.font.width(getValue() + text) > width - 22) return; // text is too long; probably won't fit
         time = System.currentTimeMillis();
         didRunAction = false;
         super.insertText(text);
