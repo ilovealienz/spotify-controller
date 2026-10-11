@@ -77,9 +77,27 @@ public class WebGuideServer {
     private static class callbackHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-            String Code = exchange.getRequestURI().getQuery().split("=")[1];
+            String Code = null;
+            String query = exchange.getRequestURI().getQuery();
+            if (query != null) {
+                for (String param : query.split("&")) {
+                    if (param.startsWith("code=")) Code = param.substring("code=".length());
+                }
+            }
 
-            Main.LOGGER.info("Callback Received: {}", Code);
+            // No code means Spotify returned an error; keep the server running so login can be retried
+            if (Code == null) {
+                Main.LOGGER.warn("Callback without code: {}", query);
+                byte[] error = ("Spotify login failed: " + query).getBytes();
+                exchange.getResponseHeaders().set("Content-Type", "text/plain");
+                exchange.sendResponseHeaders(400, error.length);
+                OutputStream os = exchange.getResponseBody();
+                os.write(error);
+                os.close();
+                return;
+            }
+
+            Main.LOGGER.info("Callback Received");
 
             String filepath = switch (MINECRAFT.getLanguageManager().getSelected()) {
                 case "ko_kr" -> "/allset/ko_kr.html";
