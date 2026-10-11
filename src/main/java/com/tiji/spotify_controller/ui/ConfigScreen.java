@@ -98,12 +98,20 @@ public class ConfigScreen extends BaseScreen {
         // Column 0 continues below the buttons, column 1 starts at the top
         int[] columnY = {y, MARGIN};
 
+        // Column 1 starts after the widest column 0 label so long labels don't overlap it
+        int firstColumnWidth = WIDTH;
+        for (Field field : SpotifyControllerConfig.class.getDeclaredFields()) {
+            SpotifyControllerConfig.EditableField metadata = field.getAnnotation(SpotifyControllerConfig.EditableField.class);
+            if (metadata == null || metadata.column() != 0) continue;
+            firstColumnWidth = Math.max(firstColumnWidth, font.width(Component.translatable(metadata.translationKey())));
+        }
+
         for (Field field : SpotifyControllerConfig.class.getDeclaredFields()) {
             SpotifyControllerConfig.EditableField metadata = field.getAnnotation(SpotifyControllerConfig.EditableField.class);
             if (metadata == null) continue;
 
             int column = Math.clamp(metadata.column(), 0, columnY.length - 1);
-            int x = MARGIN + widgetsOffset + column * (WIDTH + MARGIN*3);
+            int x = MARGIN + widgetsOffset + column * (firstColumnWidth + MARGIN*3);
             y = columnY[column];
 
             try {
