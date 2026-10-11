@@ -50,7 +50,7 @@ public abstract class SafeAbstractScreen extends Screen {
         graphics.pose().popMatrix();
 
         if (pendingTooltip != null) {
-            graphics.renderTooltip(font, pendingTooltip, mouseX, mouseY);
+            graphics.setTooltipForNextFrame(font, pendingTooltip, mouseX, mouseY);
         }
     }
 
