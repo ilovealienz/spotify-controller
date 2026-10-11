@@ -1,6 +1,9 @@
 package com.tiji.spotify_controller.ui;
 
 import net.minecraft.client.gui.GuiGraphics;
+//#if MC<=12108
+import com.mojang.blaze3d.platform.InputConstants;
+//#endif
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 //#if MC>=12109
@@ -28,6 +31,11 @@ public abstract class SafeAbstractScreen extends Screen {
     //#if MC<=12108
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        // Handle escape first so a focused input can't swallow it
+        if (keyCode == InputConstants.KEY_ESCAPE && shouldCloseOnEsc()) {
+            onClose();
+            return true;
+        }
         return safeKeyPressed(keyCode, scanCode, modifiers);
     }
     public boolean keyPressedSuper(int keyCode, int scanCode, int modifiers) {
@@ -36,6 +44,11 @@ public abstract class SafeAbstractScreen extends Screen {
     //#else
     //$$ @Override
     //$$ public boolean keyPressed(KeyEvent event) {
+    //$$     // Handle escape first so a focused input can't swallow it
+    //$$     if (event.isEscape() && shouldCloseOnEsc()) {
+    //$$         onClose();
+    //$$         return true;
+    //$$     }
     //$$     return safeKeyPressed(event.key(), event.scancode(), event.modifiers());
     //$$ }
     //$$
