@@ -58,8 +58,14 @@ public class SpotifyControllerConfig {
     @EditableField(translationKey = "ui.spotify_controller.config.panel_side"       , widget = EnumCycleWidget.class, column = 1)
     private PanelSide panelSide      = PanelSide.LEFT;
 
+    @EditableField(translationKey = "ui.spotify_controller.config.panel_scale"      , widget = IntInputWidget.class, column = 1)
+    private int panelScale           = 100;
+
     @EditableField(translationKey = "ui.spotify_controller.config.toast_position"   , widget = EnumCycleWidget.class, column = 1)
     private ToastPosition toastPosition = ToastPosition.TOP_RIGHT;
+
+    @EditableField(translationKey = "ui.spotify_controller.config.toast_scale"      , widget = IntInputWidget.class, column = 1)
+    private int toastScale           = 100;
 
     @EditableField(translationKey = "ui.spotify_controller.config.toast_padding"    , widget = IntInputWidget.class, column = 1)
     private int toastPadding         = 0;
@@ -114,6 +120,10 @@ public class SpotifyControllerConfig {
 
     public PanelSide panelSide() {return panelSide;}
     public void panelSide(PanelSide value) {panelSide = value; writeToFile();}
+
+    // Percentages, clamped so a typo can't make the UI unusable
+    public int panelScale() {return Math.clamp(panelScale, 50, 300);}
+    public int toastScale() {return Math.clamp(toastScale, 50, 300);}
 
     public ToastPosition toastPosition() {return toastPosition;}
     public void toastPosition(ToastPosition value) {toastPosition = value; writeToFile();}

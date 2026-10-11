@@ -114,7 +114,7 @@ public class NowPlayingScreen extends BaseScreen {
         addRenderableWidget(progressBar);
 
         // Subscreen button
-        y = height - MARGIN - SUBSCREEN_BUTTONS_HEIGHT;
+        y = sh() - MARGIN - SUBSCREEN_BUTTONS_HEIGHT;
         for (Map.Entry<Component, Class<? extends SecondaryBaseScreen>> entry : SUBSCREENS.entrySet()) {
             addRenderableWidget(
                     new BorderlessButtonWidget(
@@ -162,9 +162,10 @@ public class NowPlayingScreen extends BaseScreen {
         title = TextUtils.getTrantedText(title, INFO_TEXT_SIZE);
         artist = TextUtils.getTrantedText(artist, INFO_TEXT_SIZE);
 
-        context.enableScissor(
+        SafeDrawer.enableScissor(
+                context,
                 px() + IMAGE_SIZE + MARGIN*2 + 2, 0,
-                px() + PLAYBACK_SIZE, height
+                px() + PLAYBACK_SIZE, sh()
         );
         SafeDrawer.drawString(
                 context,
@@ -226,9 +227,9 @@ public class NowPlayingScreen extends BaseScreen {
         int textWidth = PLAYBACK_SIZE - MARGIN*2 - IMAGE_SIZE;
 
         if (isInsideOf(mouseX, mouseY, titleX, TITLE_Y + MARGIN, textWidth, textHeight))
-            context.renderTooltip(font, Component.translationArg(Main.currentlyPlaying.title), mouseX, mouseY);
+            queueTooltip(Component.translationArg(Main.currentlyPlaying.title));
         else if (isInsideOf(mouseX, mouseY, artistX, ARTIST_Y + MARGIN, textWidth, textHeight))
-            context.renderTooltip(font, Component.nullToEmpty(Main.currentlyPlaying.artist), mouseX, mouseY);
+            queueTooltip(Component.nullToEmpty(Main.currentlyPlaying.artist));
     }
 
     private static boolean isInsideOf(int mouseX, int mouseY, int x, int y, int w, int h) {

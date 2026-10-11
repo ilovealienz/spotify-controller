@@ -45,7 +45,7 @@ public class StringInputWidget extends EditBox implements ValueHolder {
         int y = (height - client.font.lineHeight) / 2 + getY();
         SafeDrawer.drawString(context, client.font, icon, width - 18 + getX(), y+2, Theme.text(), false);
 
-        context.enableScissor(getX(), getY(), getX() + width - 18, getY() + height);
+        SafeDrawer.enableScissor(context, getX(), getY(), getX() + width - 18, getY() + height);
         SafeDrawer.drawString(context, client.font, getValue(), getX() + 4, y+1, Theme.text(), false);
         context.disableScissor();
 

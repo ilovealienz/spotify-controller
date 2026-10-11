@@ -116,6 +116,22 @@ public class SafeDrawer {
         drawImage(context, sprite, x, y, u, v, width, height, 1, 1, 1, 1, color);
     }
 
+    // Scissor in the current pose's coordinates. 1.21.6+ applies the pose itself;
+    // older versions take raw screen coordinates, so the pose is applied here.
+    public static void enableScissor(GuiGraphics context, int x0, int y0, int x1, int y1) {
+        //#if MC>=12106
+        //$$ context.enableScissor(x0, y0, x1, y1);
+        //#else
+        org.joml.Matrix4f pose = context.pose().last().pose();
+        context.enableScissor(
+                (int) Math.floor(pose.m00() * x0 + pose.m30()),
+                (int) Math.floor(pose.m11() * y0 + pose.m31()),
+                (int) Math.ceil(pose.m00() * x1 + pose.m30()),
+                (int) Math.ceil(pose.m11() * y1 + pose.m31())
+        );
+        //#endif
+    }
+
     public static void drawOutline(GuiGraphics context,
                                    int x, int y,
                                    int w, int h,

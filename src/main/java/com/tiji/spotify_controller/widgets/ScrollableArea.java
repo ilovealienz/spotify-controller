@@ -1,5 +1,6 @@
 package com.tiji.spotify_controller.widgets;
 
+import com.tiji.spotify_controller.util.SafeDrawer;
 import com.tiji.spotify_controller.util.Theme;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -47,7 +48,7 @@ public class ScrollableArea extends SafeAbstractWidget {
             offset = -(int) ((contentHeight - height) * relativeScrollBarPos);
         }
 
-        context.enableScissor(x, y, width - SCROLLBAR_WIDTH + x, height + y);
+        SafeDrawer.enableScissor(context, x, y, width - SCROLLBAR_WIDTH + x, height + y);
 
         //#if MC>=12106
         //$$ context.pose().pushMatrix();

@@ -47,13 +47,18 @@ public class BaseScreen extends SafeAbstractScreen {
         return 220;
     }
 
+    @Override
+    protected float uiScale() {
+        return Main.CONFIG.panelScale() / 100f;
+    }
+
     protected int glowWidth() {
         return GLOW_WIDTH;
     }
 
     // Left edge of the panel without the slide animation offset
     protected int panelX() {
-        return rightSide ? width - panelWidth() : 0;
+        return rightSide ? sw() - panelWidth() : 0;
     }
 
     // Left edge of the panel including the slide animation offset
@@ -63,10 +68,6 @@ public class BaseScreen extends SafeAbstractScreen {
 
     @Override
     public void safeRender(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        //#if MC<=12106
-        super.renderBackground(context, mouseX, mouseY, delta);
-        //#endif
-
         long totalTime = Util.getMillis() - startTime;
         float normalized = (float) Math.min(totalTime, animationTime) / animationTime;
         int previousOffset = widgetsOffset;
@@ -78,9 +79,9 @@ public class BaseScreen extends SafeAbstractScreen {
         SafeDrawer.drawImage(
                 context,
                 ResourceLocation.fromNamespaceAndPath(Main.MOD_ID, rightSide ? "ui/gradient_right.png" : "ui/gradient.png"),
-                (rightSide ? width - glowWidth() : 0) + widgetsOffset, 0,
+                (rightSide ? sw() - glowWidth() : 0) + widgetsOffset, 0,
                 0, 0,
-                glowWidth(), height,
+                glowWidth(), sh(),
                 GLOW_WIDTH, 1,
                 GLOW_WIDTH, 1,
                 color

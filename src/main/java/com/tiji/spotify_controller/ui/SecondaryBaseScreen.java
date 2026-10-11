@@ -48,7 +48,7 @@ public class SecondaryBaseScreen extends BaseScreen {
         SafeDrawer.drawImage(
                 context,
                 cover.getImage(),
-                px() + MARGIN, height - IMAGE_SIZE - MARGIN,
+                px() + MARGIN, sh() - IMAGE_SIZE - MARGIN,
                 0, 0,
                 IMAGE_SIZE, IMAGE_SIZE
         );
@@ -57,17 +57,17 @@ public class SecondaryBaseScreen extends BaseScreen {
         SafeDrawer.drawString(context, 
                 font,
                 Main.currentlyPlaying.title,
-                nextX, height - (MARGIN + TITLE_Y),
+                nextX, sh() - (MARGIN + TITLE_Y),
                 Theme.text(), false
         ); // title
         SafeDrawer.drawString(context, 
                 font,
                 Main.currentlyPlaying.artist,
-                nextX, height - (MARGIN + ARTIST_Y),
+                nextX, sh() - (MARGIN + ARTIST_Y),
                 Theme.secondaryText(), false
         ); // artist
 
-        context.enableScissor(0, 0, width, height - INFO_HEIGHT);
+        SafeDrawer.enableScissor(context, 0, 0, sw(), sh() - INFO_HEIGHT);
         //#if MC<26100
         drawables.forEach(drawable -> drawable.render(context, mouseX, mouseY, delta));
         //#else

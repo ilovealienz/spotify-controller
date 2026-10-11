@@ -24,6 +24,8 @@ Starting from Feb 11, all new users needs to have Premium subscription. From Mar
 ### Fork changes
 
 - Panel side: the controller panel can slide in from the left or right edge (Options > Panel side)
+- Size: panel and toast size as a percentage, scaling text, images and click areas together
+- Toast position: any corner, with padding from the top/bottom and side edges
 - Colour scheme: Desert Night (default), Album cover (the original look, tinted by the cover art) or Custom with your own background, text and accent hex colours
 
 ### Applied Picture

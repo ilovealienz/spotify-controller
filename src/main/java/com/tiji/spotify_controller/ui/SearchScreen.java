@@ -36,7 +36,7 @@ public class SearchScreen extends SecondaryBaseScreen {
         setFocused(searchField);
 
         scrollArea = new ScrollableArea(panelX() + MARGIN, MARGIN*2 + SEARCH_BAR_HEIGHT,
-                WIDTH - MARGIN*2, height - INFO_HEIGHT - MARGIN*2 - SEARCH_BAR_HEIGHT);
+                WIDTH - MARGIN*2, sh() - INFO_HEIGHT - MARGIN*2 - SEARCH_BAR_HEIGHT);
         addRenderableWidget(scrollArea);
     }
 

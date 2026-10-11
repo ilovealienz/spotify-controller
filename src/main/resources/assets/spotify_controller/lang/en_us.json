@@ -36,6 +36,8 @@
   "ui.spotify_controller.config.target_brightness": "Target Brightness",
   "ui.spotify_controller.config.sample_size": "Sample size",
   "ui.spotify_controller.config.panel_side": "Panel side",
+  "ui.spotify_controller.config.panel_scale": "Panel size (%, 50-300)",
+  "ui.spotify_controller.config.toast_scale": "Toast size (%, 50-300)",
   "ui.spotify_controller.config.toast_position": "Toast position",
   "ui.spotify_controller.config.toast_padding": "Toast padding from top/bottom edge",
   "ui.spotify_controller.config.toast_side_padding": "Toast padding from side edge",

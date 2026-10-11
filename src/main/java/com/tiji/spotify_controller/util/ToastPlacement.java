@@ -14,6 +14,9 @@ public final class ToastPlacement {
         ToastPosition position = Main.CONFIG.toastPosition();
         int padding = Main.CONFIG.toastPadding();
         int sidePadding = Main.CONFIG.toastSidePadding();
+        float scale = Main.CONFIG.toastScale() / 100f;
+        float scaledWidth = toastWidth * scale;
+        float scaledHeight = toastHeight * scale;
 
         int screenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
         int screenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
@@ -26,15 +29,25 @@ public final class ToastPlacement {
         float currentY = context.pose().last().pose().m31();
         //#endif
 
-        float targetX = position.isLeft() ? screenWidth - currentX - toastWidth + sidePadding : currentX - sidePadding;
-        float targetY = position.isBottom() ? screenHeight - currentY - toastHeight - padding : currentY + padding;
+        // How far vanilla has slid the toast in (0 to 1), and its stack position scaled up
+        float shown = (screenWidth - currentX) / toastWidth;
+        float stackY = currentY * scale;
+
+        float targetX = position.isLeft()
+                ? scaledWidth * shown - scaledWidth + sidePadding
+                : screenWidth - scaledWidth * shown - sidePadding;
+        float targetY = position.isBottom()
+                ? screenHeight - stackY - scaledHeight - padding
+                : stackY + padding;
 
         //#if MC>=12106
         //$$ context.pose().pushMatrix();
         //$$ context.pose().translate(targetX - currentX, targetY - currentY);
+        //$$ context.pose().scale(scale, scale);
         //#else
         context.pose().pushPose();
         context.pose().translate(targetX - currentX, targetY - currentY, 0);
+        context.pose().scale(scale, scale, 1);
         //#endif
     }
 

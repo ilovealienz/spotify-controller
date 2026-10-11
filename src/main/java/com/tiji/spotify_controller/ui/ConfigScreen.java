@@ -15,6 +15,7 @@ import java.util.HashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -44,6 +45,10 @@ public class ConfigScreen extends BaseScreen {
 
     private final HashMap<Field, ValueHolder> map = new HashMap<>();
 
+    private static final int SCROLL_SPEED = 20;
+    private int scroll = 0;
+    private int contentHeight = 0;
+
     public ConfigScreen(Screen parent) {
         super(true);
 
@@ -62,6 +67,12 @@ public class ConfigScreen extends BaseScreen {
     @Override
     protected boolean useRightSide() {
         return false;
+    }
+
+    // Fixed size so the options stay usable whatever the panel size is set to
+    @Override
+    protected float uiScale() {
+        return 1f;
     }
 
     @Override
@@ -132,6 +143,33 @@ public class ConfigScreen extends BaseScreen {
             }
 
             columnY[column] = y + FIELD_HEIGHT + MARGIN + font.lineHeight;
+        }
+
+        // init() rebuilds widgets at their unscrolled positions
+        contentHeight = Math.max(columnY[0], columnY[1]);
+        int previous = scroll;
+        scroll = 0;
+        scrollBy(previous);
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+        if (super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount)) return true;
+        scrollBy((int) (verticalAmount * SCROLL_SPEED));
+        return true;
+    }
+
+    // Positive amounts move the content down
+    private void scrollBy(int amount) {
+        int min = Math.min(0, sh() - contentHeight);
+        int next = Math.clamp(scroll + amount, min, 0);
+        int delta = next - scroll;
+        scroll = next;
+
+        for (GuiEventListener child : children()) {
+            if (child instanceof LayoutElement widget) {
+                widget.setY(widget.getY() + delta);
+            }
         }
     }
 
