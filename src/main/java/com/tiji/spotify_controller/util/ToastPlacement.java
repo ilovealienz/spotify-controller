@@ -13,6 +13,7 @@ public final class ToastPlacement {
     public static void push(GuiGraphics context, int toastWidth, int toastHeight) {
         ToastPosition position = Main.CONFIG.toastPosition();
         int padding = Main.CONFIG.toastPadding();
+        int sidePadding = Main.CONFIG.toastSidePadding();
 
         int screenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
         int screenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
@@ -25,7 +26,7 @@ public final class ToastPlacement {
         float currentY = context.pose().last().pose().m31();
         //#endif
 
-        float targetX = position.isLeft() ? screenWidth - currentX - toastWidth : currentX;
+        float targetX = position.isLeft() ? screenWidth - currentX - toastWidth + sidePadding : currentX - sidePadding;
         float targetY = position.isBottom() ? screenHeight - currentY - toastHeight - padding : currentY + padding;
 
         //#if MC>=12106

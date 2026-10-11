@@ -64,6 +64,9 @@ public class SpotifyControllerConfig {
     @EditableField(translationKey = "ui.spotify_controller.config.toast_padding"    , widget = IntInputWidget.class, column = 1)
     private int toastPadding         = 0;
 
+    @EditableField(translationKey = "ui.spotify_controller.config.toast_side_padding", widget = IntInputWidget.class, column = 1)
+    private int toastSidePadding     = 0;
+
     @EditableField(translationKey = "ui.spotify_controller.config.color_scheme"     , widget = EnumCycleWidget.class, column = 1)
     private ColorScheme colorScheme  = ColorScheme.DESERT_NIGHT;
 
@@ -117,6 +120,9 @@ public class SpotifyControllerConfig {
 
     public int toastPadding() {return toastPadding;}
     public void toastPadding(int value) {toastPadding = value; writeToFile();}
+
+    public int toastSidePadding() {return toastSidePadding;}
+    public void toastSidePadding(int value) {toastSidePadding = value; writeToFile();}
 
     public ColorScheme colorScheme() {return colorScheme;}
     public void colorScheme(ColorScheme value) {colorScheme = value; writeToFile();}
