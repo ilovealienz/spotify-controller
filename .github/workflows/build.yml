@@ -1,11 +1,17 @@
 # Builds the newest Minecraft version listed in settings.gradle.kts and uploads the jar.
+# Pushing a tag starting with v (e.g. v4.5.1-fork.1) also publishes a GitHub release with the jar.
 
 name: build
-on: [pull_request, push]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-24.04
+    permissions:
+      contents: write
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
@@ -33,3 +39,13 @@ jobs:
           path: |
             versions/${{ env.LATEST }}/build/libs/*.jar
             !versions/${{ env.LATEST }}/build/libs/*-sources.jar
+      - name: remove sources jar
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: rm -f versions/$LATEST/build/libs/*-sources.jar
+      - name: publish release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }} (${{ env.LATEST }})
+          files: versions/${{ env.LATEST }}/build/libs/*.jar
+          generate_release_notes: true
