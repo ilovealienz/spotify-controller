@@ -20,17 +20,22 @@ public class SearchScreen extends SecondaryBaseScreen {
     private ScrollableArea scrollArea;
 
     @Override
+    protected int panelWidth() {
+        return WIDTH;
+    }
+
+    @Override
     protected void init() {
         super.init();
 
         StringInputWidget searchField = new StringInputWidget(font,
-                MARGIN, MARGIN,
+                panelX() + MARGIN, MARGIN,
                 WIDTH - MARGIN*2, SEARCH_BAR_HEIGHT, Component.empty(),
                 Icons.SEARCH, this::search);
         addRenderableWidget(searchField);
         setFocused(searchField);
 
-        scrollArea = new ScrollableArea(MARGIN, MARGIN*2 + SEARCH_BAR_HEIGHT,
+        scrollArea = new ScrollableArea(panelX() + MARGIN, MARGIN*2 + SEARCH_BAR_HEIGHT,
                 WIDTH - MARGIN*2, height - INFO_HEIGHT - MARGIN*2 - SEARCH_BAR_HEIGHT);
         addRenderableWidget(scrollArea);
     }

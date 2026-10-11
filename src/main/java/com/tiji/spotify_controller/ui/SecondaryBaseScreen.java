@@ -1,5 +1,6 @@
 package com.tiji.spotify_controller.ui;
 
+import com.tiji.spotify_controller.util.Theme;
 import com.tiji.spotify_controller.Main;
 import com.tiji.spotify_controller.util.SafeDrawer;
 import com.tiji.spotify_controller.util.ImageWithColor;
@@ -27,6 +28,11 @@ public class SecondaryBaseScreen extends BaseScreen {
     }
 
     @Override
+    protected int panelWidth() {
+        return 300;
+    }
+
+    @Override
     protected void clearWidgets() {
         super.clearWidgets();
 
@@ -42,23 +48,23 @@ public class SecondaryBaseScreen extends BaseScreen {
         SafeDrawer.drawImage(
                 context,
                 cover.getImage(),
-                MARGIN, height - IMAGE_SIZE - MARGIN,
+                px() + MARGIN, height - IMAGE_SIZE - MARGIN,
                 0, 0,
                 IMAGE_SIZE, IMAGE_SIZE
         );
-        int nextX = (int) (MARGIN*1.5 + widgetsOffset + IMAGE_SIZE + 3);
+        int nextX = (int) (px() + MARGIN*1.5 + IMAGE_SIZE + 3);
 
         SafeDrawer.drawString(context, 
                 font,
                 Main.currentlyPlaying.title,
                 nextX, height - (MARGIN + TITLE_Y),
-                0xFFFFFFFF, false
+                Theme.text(), false
         ); // title
         SafeDrawer.drawString(context, 
                 font,
                 Main.currentlyPlaying.artist,
                 nextX, height - (MARGIN + ARTIST_Y),
-                0xFFFFFFFF, false
+                Theme.secondaryText(), false
         ); // artist
 
         context.enableScissor(0, 0, width, height - INFO_HEIGHT);

@@ -1,5 +1,6 @@
 package com.tiji.spotify_controller.widgets;
 
+import com.tiji.spotify_controller.util.Theme;
 import com.tiji.spotify_controller.util.SafeDrawer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
@@ -26,7 +27,7 @@ public class LabelWidget extends SafeAbstractWidget {
 
     @Override
     public void safeRender(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        SafeDrawer.drawString(context, Minecraft.getInstance().font, text, getX(), getY(), 0xFFFFFFFF, false);
+        SafeDrawer.drawString(context, Minecraft.getInstance().font, text, getX(), getY(), Theme.text(), false);
     }
 
     public Component getText() {

@@ -1,5 +1,6 @@
 package com.tiji.spotify_controller.widgets;
 
+import com.tiji.spotify_controller.util.Theme;
 import com.google.gson.JsonObject;
 import com.tiji.spotify_controller.api.SpotifyApi;
 import com.tiji.spotify_controller.api.SongData;
@@ -49,7 +50,7 @@ public class SongListItem extends SafeAbstractWidget {
         else fadePos -= change;
         fadePos = Math.clamp(fadePos, 20 / 255f, 1);
 
-        int color = ((int) (fadePos * 255)) << 24 | 0x00FFFFFF;
+        int color = Theme.withAlpha(Theme.accent(), (int) (fadePos * 255));
 
         int imageColor = ((int) (255 - fadePos * IMAGE_FADE_OUT) * 0x00010101) | 0xFF000000;
         SafeDrawer.drawImage(
@@ -61,8 +62,8 @@ public class SongListItem extends SafeAbstractWidget {
                 imageColor
         );
 
-        SafeDrawer.drawString(context, client.font, song.title, x + IMAGE_SIZE + MARGIN, y + MARGIN, 0xFFFFFFFF, false);
-        SafeDrawer.drawString(context, client.font, song.artist, x + IMAGE_SIZE + MARGIN, y + MARGIN + 15, 0xFFFFFFFF, false);
+        SafeDrawer.drawString(context, client.font, song.title, x + IMAGE_SIZE + MARGIN, y + MARGIN, Theme.text(), false);
+        SafeDrawer.drawString(context, client.font, song.artist, x + IMAGE_SIZE + MARGIN, y + MARGIN + 15, Theme.secondaryText(), false);
 
         SafeDrawer.drawString(context, client.font, Icons.ADD_TO_QUEUE, x + IMAGE_SIZE - 8 - MARGIN, y + IMAGE_SIZE - 5 - MARGIN, color, false);
     }

@@ -21,6 +21,11 @@ Starting from Feb 11, all new users needs to have Premium subscription. From Mar
 - Search for a song
 - View synced lyrics [(Thank you LRCLIB!)](https://lrclib.net/)
 
+### Fork changes
+
+- Panel side: the controller panel can slide in from the left or right edge (Options > Panel side)
+- Colour scheme: Desert Night (default), Album cover (the original look, tinted by the cover art) or Custom with your own background, text and accent hex colours
+
 ### Applied Picture
 
 ![In game screenshot](https://cdn.modrinth.com/data/cached_images/0cd0a61c28fd4b1f6f4c44b4b5cd631c04e5319d_0.webp)

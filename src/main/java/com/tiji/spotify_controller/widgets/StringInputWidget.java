@@ -1,5 +1,6 @@
 package com.tiji.spotify_controller.widgets;
 
+import com.tiji.spotify_controller.util.Theme;
 import java.util.function.Consumer;
 
 import com.tiji.spotify_controller.util.SafeDrawer;
@@ -39,13 +40,13 @@ public class StringInputWidget extends EditBox implements ValueHolder {
     //$$ public void extractWidgetRenderState(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta)
     //#endif
     {
-        SafeDrawer.drawOutline(context, getX(), getY(), width, height, 0xFFFFFFFF);
+        SafeDrawer.drawOutline(context, getX(), getY(), width, height, isFocused() ? Theme.accent() : Theme.text());
 
         int y = (height - client.font.lineHeight) / 2 + getY();
-        SafeDrawer.drawString(context, client.font, icon, width - 18 + getX(), y+2, 0xFFFFFFFF, false);
+        SafeDrawer.drawString(context, client.font, icon, width - 18 + getX(), y+2, Theme.text(), false);
 
         context.enableScissor(getX(), getY(), getX() + width - 18, getY() + height);
-        SafeDrawer.drawString(context, client.font, getValue(), getX() + 4, y+1, 0xFFFFFFFF, false);
+        SafeDrawer.drawString(context, client.font, getValue(), getX() + 4, y+1, Theme.text(), false);
         context.disableScissor();
 
         long timePast = System.currentTimeMillis() - time;
@@ -53,7 +54,7 @@ public class StringInputWidget extends EditBox implements ValueHolder {
         if (shouldBlink && isFocused()) {
             SafeDrawer.vLine(context, client.font.width(getValue().substring(0, getCursorPosition())) + getX() + 4, getY() + 3,
                     getY() + height - 5,
-                    0xFFFFFFFF);
+                    Theme.text());
         }
 
         if (!didRunAction && timePast > MAX_TYPING_PAUSE) {

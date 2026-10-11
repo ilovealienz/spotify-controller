@@ -58,6 +58,17 @@ public class ConfigScreen extends BaseScreen {
         }
     }
 
+    // Always on the left so the options don't move while changing the side
+    @Override
+    protected boolean useRightSide() {
+        return false;
+    }
+
+    @Override
+    protected int glowWidth() {
+        return WIDTH*3 + MARGIN*4;
+    }
+
     public void init() {
         super.init();
 
@@ -84,28 +95,35 @@ public class ConfigScreen extends BaseScreen {
         addRenderableWidget(dumpButton);
         y += resetButton.getHeight() + MARGIN*3;
 
+        // Column 0 continues below the buttons, column 1 starts at the top
+        int[] columnY = {y, MARGIN};
+
         for (Field field : SpotifyControllerConfig.class.getDeclaredFields()) {
             SpotifyControllerConfig.EditableField metadata = field.getAnnotation(SpotifyControllerConfig.EditableField.class);
             if (metadata == null) continue;
 
+            int column = Math.clamp(metadata.column(), 0, columnY.length - 1);
+            int x = MARGIN + widgetsOffset + column * (WIDTH + MARGIN*3);
+            y = columnY[column];
+
             try {
                 ValueHolder widget = metadata.widget()
                         .getConstructor(int.class, int.class, int.class, int.class)
-                        .newInstance(MARGIN + widgetsOffset, y + font.lineHeight, WIDTH, FIELD_HEIGHT);
+                        .newInstance(x, y + font.lineHeight, WIDTH, FIELD_HEIGHT);
 
                 field.setAccessible(true);
                 widget.setValue(field.get(Main.CONFIG));
 
                 addRenderableWidget((GuiEventListener & Renderable & NarratableEntry) widget);
 
-                addRenderableWidget(new LabelWidget(MARGIN + widgetsOffset, y, Component.translatable(metadata.translationKey())));
+                addRenderableWidget(new LabelWidget(x, y, Component.translatable(metadata.translationKey())));
 
                 map.put(field, widget);
             } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
 
-            y += FIELD_HEIGHT + MARGIN + font.lineHeight;
+            columnY[column] = y + FIELD_HEIGHT + MARGIN + font.lineHeight;
         }
     }
 

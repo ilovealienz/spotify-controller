@@ -3,6 +3,7 @@ package com.tiji.spotify_controller;
 import com.tiji.spotify_controller.util.ImageWithColor;
 import com.tiji.spotify_controller.util.SafeDrawer;
 import com.tiji.spotify_controller.util.TextUtils;
+import com.tiji.spotify_controller.util.Theme;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -39,13 +40,17 @@ public class SongToast implements Toast {
     public Visibility render(GuiGraphics context, ToastComponent manager, long timePast) {
         Font textRenderer = Minecraft.getInstance().font;
 
-        context.fill(0, 0, TOAST_WIDTH, TOAST_HEIGHT, fixIncapableColor(cover.color));
+        boolean album = Theme.usesAlbumColor();
+        int albumLabel = cover.shouldUseDarkUI ? CommonColors.WHITE : CommonColors.BLACK;
 
-        int labelColor = cover.shouldUseDarkUI ? CommonColors.WHITE : CommonColors.BLACK;
-        SafeDrawer.drawString(context, textRenderer, title , IMAGE_WIDTH + MARGIN, TITLE_Y , labelColor, false);
-        SafeDrawer.drawString(context, textRenderer, artist, IMAGE_WIDTH + MARGIN, ARTIST_Y, labelColor, false);
+        context.fill(0, 0, TOAST_WIDTH, TOAST_HEIGHT, album ? fixIncapableColor(cover.color) : Theme.background());
+
+        SafeDrawer.drawString(context, textRenderer, title , IMAGE_WIDTH + MARGIN, TITLE_Y , album ? albumLabel : Theme.text(), false);
+        SafeDrawer.drawString(context, textRenderer, artist, IMAGE_WIDTH + MARGIN, ARTIST_Y, album ? albumLabel : Theme.secondaryText(), false);
 
         context.blit(cover.getImage(), 0, 0, 0, 0, IMAGE_WIDTH, TOAST_HEIGHT, IMAGE_WIDTH, TOAST_HEIGHT);
+
+        if (!album) SafeDrawer.drawOutline(context, 0, 0, TOAST_WIDTH, TOAST_HEIGHT, Theme.accent());
 
         return DISPLAY_DURATION_MS * manager.getNotificationDisplayTimeMultiplier() <= timePast
                 ? Visibility.HIDE

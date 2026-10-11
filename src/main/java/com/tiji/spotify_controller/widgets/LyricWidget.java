@@ -1,5 +1,6 @@
 package com.tiji.spotify_controller.widgets;
 
+import com.tiji.spotify_controller.util.Theme;
 import com.tiji.spotify_controller.Main;
 import com.tiji.spotify_controller.api.Lyrics;
 import com.tiji.spotify_controller.util.SafeDrawer;
@@ -54,7 +55,7 @@ public class LyricWidget extends SafeAbstractWidget {
                 SafeDrawer.drawString(context, font,
                     line,
                     getX(), y,
-                    isPast ? 0x77FFFFFF : 0xFFFFFFFF,
+                    isPast ? Theme.muted() : Theme.text(),
                     false);
                 y += font.lineHeight + LINE_MARGIN;
             }

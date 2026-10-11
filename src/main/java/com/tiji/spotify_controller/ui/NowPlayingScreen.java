@@ -45,13 +45,18 @@ public class NowPlayingScreen extends BaseScreen {
     }
 
     @Override
+    protected int panelWidth() {
+        return PLAYBACK_SIZE + MARGIN*2;
+    }
+
+    @Override
     protected void init() {
         super.init();
 
         Minecraft client = Minecraft.getInstance();
 
         // Buttons
-        int x = MARGIN *2 + widgetsOffset + IMAGE_SIZE;
+        int x = px() + MARGIN *2 + IMAGE_SIZE;
         int y = MARGIN + PLAYBACK_CONTROL_Y;
 
         shuffleButton = new BorderlessButtonWidget(
@@ -102,7 +107,7 @@ public class NowPlayingScreen extends BaseScreen {
 
         // Progress bar
         progressBar = new ProgressWidget(
-                MARGIN + widgetsOffset, (int) (MARGIN * 1.5 + IMAGE_SIZE), PLAYBACK_SIZE,
+                px() + MARGIN, (int) (MARGIN * 1.5 + IMAGE_SIZE), PLAYBACK_SIZE,
                 (float) Main.playbackState.getProgressNorm(),
                 (v) -> SpotifyApi.setPlaybackLoc((int) (Main.currentlyPlaying.duration * v))
         );
@@ -114,7 +119,7 @@ public class NowPlayingScreen extends BaseScreen {
             addRenderableWidget(
                     new BorderlessButtonWidget(
                             entry.getKey(),
-                            MARGIN + widgetsOffset, y,
+                            px() + MARGIN, y,
                             () -> {
                                 try {
                                     assert minecraft != null;
@@ -144,12 +149,12 @@ public class NowPlayingScreen extends BaseScreen {
         SafeDrawer.drawImage(
                 context,
                 cover.getImage(),
-                MARGIN + widgetsOffset, MARGIN,
+                px() + MARGIN, MARGIN,
                 0, 0,
                 IMAGE_SIZE, IMAGE_SIZE
         );
 
-        int nextX = MARGIN *2 + widgetsOffset + IMAGE_SIZE + 3;
+        int nextX = px() + MARGIN *2 + IMAGE_SIZE + 3;
 
         Component title = Component.translationArg(Main.currentlyPlaying.title);
         Component artist = Component.nullToEmpty(Main.currentlyPlaying.artist);
@@ -158,22 +163,22 @@ public class NowPlayingScreen extends BaseScreen {
         artist = TextUtils.getTrantedText(artist, INFO_TEXT_SIZE);
 
         context.enableScissor(
-                IMAGE_SIZE + MARGIN*2 + 2 + widgetsOffset, 0,
-                PLAYBACK_SIZE + widgetsOffset, height
+                px() + IMAGE_SIZE + MARGIN*2 + 2, 0,
+                px() + PLAYBACK_SIZE, height
         );
         SafeDrawer.drawString(
                 context,
                 font,
                 title,
                 nextX, MARGIN + TITLE_Y,
-                0xFFFFFFFF, false
+                Theme.text(), false
         ); // title
         SafeDrawer.drawString(
                 context,
                 font,
                 artist,
                 nextX, MARGIN + ARTIST_Y,
-                0xFFFFFFFF, false
+                Theme.secondaryText(), false
         ); // artist
         context.disableScissor();
 
@@ -182,18 +187,18 @@ public class NowPlayingScreen extends BaseScreen {
                 context,
                 font,
                 Component.nullToEmpty(Main.playbackState.getProgressLabel()),
-                MARGIN + widgetsOffset,
+                px() + MARGIN,
                 MARGIN + PLAYBACK_CONTROL_Y + 35,
-                0xFFFFFFFF, false
+                Theme.text(), false
         ); // progress label
 
         SafeDrawer.drawString(
                 context,
                 font,
                 Component.nullToEmpty(Main.currentlyPlaying.durationLabel),
-                MARGIN + widgetsOffset + PLAYBACK_SIZE - font.width(Component.nullToEmpty(Main.currentlyPlaying.durationLabel)) + 1,
+                px() + MARGIN + PLAYBACK_SIZE - font.width(Component.nullToEmpty(Main.currentlyPlaying.durationLabel)) + 1,
                 MARGIN + PLAYBACK_CONTROL_Y + 35,
-                0xFFFFFFFF, false
+                Theme.text(), false
         ); // duration label
 
         drawFullName(context, mouseX, mouseY, nextX, nextX);

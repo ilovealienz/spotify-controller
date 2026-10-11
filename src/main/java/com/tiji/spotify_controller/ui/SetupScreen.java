@@ -1,5 +1,6 @@
 package com.tiji.spotify_controller.ui;
 
+import com.tiji.spotify_controller.util.Theme;
 import com.mojang.blaze3d.Blaze3D;
 import com.tiji.spotify_controller.Main;
 import com.tiji.spotify_controller.util.SafeDrawer;
@@ -39,7 +40,7 @@ public class SetupScreen extends BaseScreen {
 
     private @NotNull BorderlessButtonWidget getButtonWidget(String button, String url) {
         return new BorderlessButtonWidget(Icons.POPUP_OPEN.copy().append(Component.literal(button).setStyle(LINK)),
-            MARGIN + widgetsOffset, MARGIN * 3 + font.lineHeight * 3,
+            px() + MARGIN, MARGIN * 3 + font.lineHeight * 3,
             () -> {
                 //#if MC<=26200
                 Util.getPlatform().openUri(url);
@@ -54,14 +55,14 @@ public class SetupScreen extends BaseScreen {
     public void safeRender(GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.safeRender(context, mouseX, mouseY, delta);
 
-        SafeDrawer.drawString(context, font, Component.translatable("ui.spotify_controller.welcome"), MARGIN + widgetsOffset, MARGIN, 0xFFFFFFFF, false);
+        SafeDrawer.drawString(context, font, Component.translatable("ui.spotify_controller.welcome"), px() + MARGIN, MARGIN, Theme.text(), false);
 
         String rawText = I18n.get("ui.spotify_controller.welcome.subtext");
         String[] warpedText = TextUtils.warpText(rawText, 200);
         int y = MARGIN*2 + font.lineHeight;
 
         for (String line : warpedText) {
-            SafeDrawer.drawString(context, font, line, MARGIN + widgetsOffset, y, 0xFFFFFFFF, false);
+            SafeDrawer.drawString(context, font, line, px() + MARGIN, y, Theme.text(), false);
             y += font.lineHeight;
         }
     }

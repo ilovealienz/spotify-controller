@@ -1,5 +1,6 @@
 package com.tiji.spotify_controller.ui;
 
+import com.tiji.spotify_controller.util.Theme;
 import com.tiji.spotify_controller.Main;
 import com.tiji.spotify_controller.api.LRCLibApi;
 import com.tiji.spotify_controller.api.Lyrics;
@@ -20,8 +21,13 @@ public class LyricScreen extends SecondaryBaseScreen {
     private ScrollableArea scrollableArea;
 
     @Override
+    protected int panelWidth() {
+        return WIDTH + MARGIN*2;
+    }
+
+    @Override
     public void init() {
-        scrollableArea = new ScrollableArea(MARGIN, MARGIN, WIDTH, height - MARGIN - INFO_HEIGHT);
+        scrollableArea = new ScrollableArea(panelX() + MARGIN, MARGIN, WIDTH, height - MARGIN - INFO_HEIGHT);
         lyricWidget = new LyricWidget(Lyrics.empty(), 0, 0, WIDTH);
         scrollableArea.addWidget(lyricWidget);
         addRenderableWidget(scrollableArea);
@@ -41,7 +47,7 @@ public class LyricScreen extends SecondaryBaseScreen {
 
         if (failedMessage != null) {
             bigText(context, "ui.spotify_controller.failed");
-            SafeDrawer.drawString(context, font, Component.literal(failedMessage), MARGIN, MARGIN*2 + font.lineHeight*2, 0xFFFFFFFF, false);
+            SafeDrawer.drawString(context, font, Component.literal(failedMessage), panelX() + MARGIN, MARGIN*2 + font.lineHeight*2, Theme.text(), false);
         } else if (isLoading) {
             bigText(context, "ui.spotify_controller.loading");
         }
@@ -56,7 +62,7 @@ public class LyricScreen extends SecondaryBaseScreen {
         context.pose().scale(2, 2, 2);
         //#endif
 
-        SafeDrawer.drawString(context, font, Component.translatable(text), MARGIN / 2, MARGIN / 2, 0xFFFFFFFF, false);
+        SafeDrawer.drawString(context, font, Component.translatable(text), (panelX() + MARGIN) / 2, MARGIN / 2, Theme.text(), false);
 
         //#if MC>=12106
         //$$ context.pose().popMatrix();

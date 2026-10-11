@@ -1,5 +1,6 @@
 package com.tiji.spotify_controller.widgets;
 
+import com.tiji.spotify_controller.util.Theme;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -10,8 +11,6 @@ public class ProgressWidget extends SafeAbstractWidget {
     private static final int RAIL_HEIGHT = 2;
     private static final int RAIL_Y = (h - RAIL_HEIGHT) / 2;
     private static final int THUMB_SIZE = 4;
-
-    private static final int COLOR = 0xFFFFFFFF;
 
     private float value;
     private final Consumer<Float> action;
@@ -43,12 +42,15 @@ public class ProgressWidget extends SafeAbstractWidget {
         }
 
         int thumbPosition = getThumbPosition();
+        int played = Theme.accent();
+        int remaining = Theme.usesAlbumColor() ? Theme.withAlpha(Theme.text(), 0x77) : Theme.muted();
+
         context.fill(getX(), getY() + RAIL_Y,
-                getX() + thumbPosition, getY() + RAIL_Y + RAIL_HEIGHT, COLOR); // Rail left
+                getX() + thumbPosition, getY() + RAIL_Y + RAIL_HEIGHT, played); // Rail left
         context.fill(getX() + thumbPosition, getY() + RAIL_Y,
-                getX() + getWidth(), getY() + RAIL_Y + RAIL_HEIGHT, COLOR - 0x88000000); // Translucent rail right
+                getX() + getWidth(), getY() + RAIL_Y + RAIL_HEIGHT, remaining); // Rail right
         context.fill(getX() + thumbPosition, getY() + (h - THUMB_SIZE) / 2,
-                getX() + thumbPosition + THUMB_SIZE, getY() + (h + THUMB_SIZE) / 2, COLOR); // Thumb
+                getX() + thumbPosition + THUMB_SIZE, getY() + (h + THUMB_SIZE) / 2, played); // Thumb
     }
 
     protected int getThumbPosition() {

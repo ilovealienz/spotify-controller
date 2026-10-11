@@ -1,5 +1,6 @@
 package com.tiji.spotify_controller.widgets;
 
+import com.tiji.spotify_controller.util.Theme;
 import com.tiji.spotify_controller.util.SafeDrawer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -39,7 +40,7 @@ public class BorderedButtonWidget extends BorderlessButtonWidget {
 
     @Override
     public void safeRender(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        SafeDrawer.drawOutline(context, getX(), getY(), width, BUTTON_SIZE + PADDING*2, isHovered(mouseX, mouseY) ? HOVERED_COLOR : NORMAL_COLOR);
+        SafeDrawer.drawOutline(context, getX(), getY(), width, BUTTON_SIZE + PADDING*2, isHovered(mouseX, mouseY) ? Theme.hover() : Theme.text());
 
         int x = getX() + PADDING;
         if (needsCentering) {
@@ -48,7 +49,7 @@ public class BorderedButtonWidget extends BorderlessButtonWidget {
 
         SafeDrawer.drawString(context, client.font, label,
                 x, getY() + LABEL_OFFSET + PADDING,
-                isHovered(mouseX, mouseY) ? HOVERED_COLOR : NORMAL_COLOR,
+                isHovered(mouseX, mouseY) ? Theme.hover() : Theme.text(),
                 false);
     }
 

@@ -3,7 +3,9 @@ package com.tiji.spotify_controller.ui;
 import com.tiji.spotify_controller.Main;
 import com.tiji.spotify_controller.util.SafeDrawer;
 import com.tiji.spotify_controller.util.ImageWithColor;
+import com.tiji.spotify_controller.util.PanelSide;
 import com.tiji.spotify_controller.util.SafeScreenUtils;
+import com.tiji.spotify_controller.util.Theme;
 import net.minecraft.Util;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -13,17 +15,50 @@ import net.minecraft.resources.ResourceLocation;
 
 public class BaseScreen extends SafeAbstractScreen {
     protected long startTime = Util.getMillis();
-    protected int widgetsOffset = -100;
+    protected int widgetsOffset;
     protected static final int ANIMATION_AMOUNT = 100;
     private static final int animationTime = 250;
+    private static final int GLOW_WIDTH = 255;
+    protected final boolean rightSide;
 
     public BaseScreen(boolean animate) {
         super(Component.nullToEmpty(""));
+
+        rightSide = useRightSide();
+        widgetsOffset = slideDirection() * ANIMATION_AMOUNT;
 
         if (!animate) {
             startTime -= animationTime;
             widgetsOffset = 0;
         }
+    }
+
+    protected boolean useRightSide() {
+        return Main.CONFIG.panelSide() == PanelSide.RIGHT;
+    }
+
+    // -1 slides in from the left edge, 1 from the right edge
+    private int slideDirection() {
+        return rightSide ? 1 : -1;
+    }
+
+    // Width of the panel content, used to anchor it to the right edge
+    protected int panelWidth() {
+        return 220;
+    }
+
+    protected int glowWidth() {
+        return GLOW_WIDTH;
+    }
+
+    // Left edge of the panel without the slide animation offset
+    protected int panelX() {
+        return rightSide ? width - panelWidth() : 0;
+    }
+
+    // Left edge of the panel including the slide animation offset
+    protected int px() {
+        return panelX() + widgetsOffset;
     }
 
     @Override
@@ -38,20 +73,20 @@ public class BaseScreen extends SafeAbstractScreen {
 
         // Glow
         ImageWithColor cover = Main.currentlyPlaying.coverImage;
-        int color = cover.color;
+        int color = Theme.glow(cover);
 
         SafeDrawer.drawImage(
                 context,
-                ResourceLocation.fromNamespaceAndPath(Main.MOD_ID, "ui/gradient.png"),
-                widgetsOffset, 0,
+                ResourceLocation.fromNamespaceAndPath(Main.MOD_ID, rightSide ? "ui/gradient_right.png" : "ui/gradient.png"),
+                (rightSide ? width - glowWidth() : 0) + widgetsOffset, 0,
                 0, 0,
-                255, height,
-                255, 1,
-                255, 1,
+                glowWidth(), height,
+                GLOW_WIDTH, 1,
+                GLOW_WIDTH, 1,
                 color
         );
 
-        widgetsOffset = (int) (-ANIMATION_AMOUNT + easeInOut(normalized) * ANIMATION_AMOUNT);
+        widgetsOffset = (int) (slideDirection() * (ANIMATION_AMOUNT - easeInOut(normalized) * ANIMATION_AMOUNT));
 
         for (GuiEventListener child : children()) {
             if (child instanceof LayoutElement widget) {

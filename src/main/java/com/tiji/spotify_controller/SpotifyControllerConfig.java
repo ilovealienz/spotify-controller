@@ -1,6 +1,11 @@
 package com.tiji.spotify_controller;
 
 import com.google.gson.Gson;
+import com.tiji.spotify_controller.util.ColorScheme;
+import com.tiji.spotify_controller.util.PanelSide;
+import com.tiji.spotify_controller.util.Theme;
+import com.tiji.spotify_controller.widgets.EnumCycleWidget;
+import com.tiji.spotify_controller.widgets.StringInputWidget;
 import com.tiji.spotify_controller.widgets.BooleanToggleWidget;
 import com.tiji.spotify_controller.widgets.IntInputWidget;
 import com.tiji.spotify_controller.widgets.ValueHolder;
@@ -22,6 +27,7 @@ public class SpotifyControllerConfig {
     public @interface EditableField {
         String translationKey();
         Class<? extends ValueHolder> widget();
+        int column() default 0;
     }
 
     private String clientId = "";
@@ -47,6 +53,21 @@ public class SpotifyControllerConfig {
 
     @EditableField(translationKey = "ui.spotify_controller.config.sample_size"      , widget = IntInputWidget.class)
     private int sampleSize           = 10;
+
+    @EditableField(translationKey = "ui.spotify_controller.config.panel_side"       , widget = EnumCycleWidget.class, column = 1)
+    private PanelSide panelSide      = PanelSide.LEFT;
+
+    @EditableField(translationKey = "ui.spotify_controller.config.color_scheme"     , widget = EnumCycleWidget.class, column = 1)
+    private ColorScheme colorScheme  = ColorScheme.DESERT_NIGHT;
+
+    @EditableField(translationKey = "ui.spotify_controller.config.custom_background", widget = StringInputWidget.class, column = 1)
+    private String customBackground  = Theme.DEFAULT_CUSTOM_BACKGROUND;
+
+    @EditableField(translationKey = "ui.spotify_controller.config.custom_text"      , widget = StringInputWidget.class, column = 1)
+    private String customText        = Theme.DEFAULT_CUSTOM_TEXT;
+
+    @EditableField(translationKey = "ui.spotify_controller.config.custom_accent"    , widget = StringInputWidget.class, column = 1)
+    private String customAccent      = Theme.DEFAULT_CUSTOM_ACCENT;
 
     public String clientId() {return clientId;}
     public void clientId(String value) {clientId = value; writeToFile();}
@@ -81,6 +102,26 @@ public class SpotifyControllerConfig {
     public int sampleSize() {return sampleSize;}
     public void sampleSize(int value) {sampleSize = value; writeToFile();}
 
+    public PanelSide panelSide() {return panelSide;}
+    public void panelSide(PanelSide value) {panelSide = value; writeToFile();}
+
+    public ColorScheme colorScheme() {return colorScheme;}
+    public void colorScheme(ColorScheme value) {colorScheme = value; writeToFile();}
+
+    public String customBackground() {return customBackground;}
+    public String customText() {return customText;}
+    public String customAccent() {return customAccent;}
+
+    // Fields missing or invalid in an older config file come back as null from Gson
+    private SpotifyControllerConfig fillDefaults() {
+        if (panelSide == null) panelSide = PanelSide.LEFT;
+        if (colorScheme == null) colorScheme = ColorScheme.DESERT_NIGHT;
+        if (customBackground == null) customBackground = Theme.DEFAULT_CUSTOM_BACKGROUND;
+        if (customText == null) customText = Theme.DEFAULT_CUSTOM_TEXT;
+        if (customAccent == null) customAccent = Theme.DEFAULT_CUSTOM_ACCENT;
+        return this;
+    }
+
     public static SpotifyControllerConfig generate() {
         Path configDir = FabricLoader.getInstance().getConfigDir();
 
@@ -91,7 +132,7 @@ public class SpotifyControllerConfig {
             if (Files.exists(configPath)) {
                 String json = Files.readString(configPath);
 
-                return new Gson().fromJson(json, SpotifyControllerConfig.class);
+                return new Gson().fromJson(json, SpotifyControllerConfig.class).fillDefaults();
             } else if (Files.exists(oldPath)) {
                 Files.copy(oldPath, configPath, StandardCopyOption.REPLACE_EXISTING);
 

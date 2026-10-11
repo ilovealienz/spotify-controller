@@ -1,5 +1,6 @@
 package com.tiji.spotify_controller.widgets;
 
+import com.tiji.spotify_controller.util.Theme;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -39,10 +40,10 @@ public class ScrollableArea extends SafeAbstractWidget {
         if (height < contentHeight) {
             context.fill(width - SCROLLBAR_WIDTH + x, y,
                     width + x, height + y,
-                    0x77FFFFFF);
+                    Theme.muted());
             context.fill(width - SCROLLBAR_WIDTH + x, scrollBarPos + y,
                     width + x, scrollBarPos + scrollBarSize + y,
-                    0xFFFFFFFF);
+                    Theme.text());
             offset = -(int) ((contentHeight - height) * relativeScrollBarPos);
         }
 
