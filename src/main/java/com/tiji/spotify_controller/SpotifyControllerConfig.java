@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.tiji.spotify_controller.util.ColorScheme;
 import com.tiji.spotify_controller.util.PanelSide;
 import com.tiji.spotify_controller.util.Theme;
+import com.tiji.spotify_controller.util.ToastPosition;
 import com.tiji.spotify_controller.widgets.EnumCycleWidget;
 import com.tiji.spotify_controller.widgets.StringInputWidget;
 import com.tiji.spotify_controller.widgets.BooleanToggleWidget;
@@ -57,6 +58,12 @@ public class SpotifyControllerConfig {
     @EditableField(translationKey = "ui.spotify_controller.config.panel_side"       , widget = EnumCycleWidget.class, column = 1)
     private PanelSide panelSide      = PanelSide.LEFT;
 
+    @EditableField(translationKey = "ui.spotify_controller.config.toast_position"   , widget = EnumCycleWidget.class, column = 1)
+    private ToastPosition toastPosition = ToastPosition.TOP_RIGHT;
+
+    @EditableField(translationKey = "ui.spotify_controller.config.toast_padding"    , widget = IntInputWidget.class, column = 1)
+    private int toastPadding         = 0;
+
     @EditableField(translationKey = "ui.spotify_controller.config.color_scheme"     , widget = EnumCycleWidget.class, column = 1)
     private ColorScheme colorScheme  = ColorScheme.DESERT_NIGHT;
 
@@ -105,6 +112,12 @@ public class SpotifyControllerConfig {
     public PanelSide panelSide() {return panelSide;}
     public void panelSide(PanelSide value) {panelSide = value; writeToFile();}
 
+    public ToastPosition toastPosition() {return toastPosition;}
+    public void toastPosition(ToastPosition value) {toastPosition = value; writeToFile();}
+
+    public int toastPadding() {return toastPadding;}
+    public void toastPadding(int value) {toastPadding = value; writeToFile();}
+
     public ColorScheme colorScheme() {return colorScheme;}
     public void colorScheme(ColorScheme value) {colorScheme = value; writeToFile();}
 
@@ -115,6 +128,7 @@ public class SpotifyControllerConfig {
     // Fields missing or invalid in an older config file come back as null from Gson
     private SpotifyControllerConfig fillDefaults() {
         if (panelSide == null) panelSide = PanelSide.LEFT;
+        if (toastPosition == null) toastPosition = ToastPosition.TOP_RIGHT;
         if (colorScheme == null) colorScheme = ColorScheme.DESERT_NIGHT;
         if (customBackground == null) customBackground = Theme.DEFAULT_CUSTOM_BACKGROUND;
         if (customText == null) customText = Theme.DEFAULT_CUSTOM_TEXT;

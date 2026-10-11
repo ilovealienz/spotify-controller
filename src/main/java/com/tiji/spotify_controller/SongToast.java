@@ -4,6 +4,7 @@ import com.tiji.spotify_controller.util.SafeDrawer;
 import com.tiji.spotify_controller.util.ImageWithColor;
 import com.tiji.spotify_controller.util.TextUtils;
 import com.tiji.spotify_controller.util.Theme;
+import com.tiji.spotify_controller.util.ToastPlacement;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.Toast;
@@ -57,6 +58,8 @@ public class SongToast implements Toast {
     //$$ public void extractRenderState(GuiGraphicsExtractor context, Font textRenderer, long startTime)
     //#endif
     {
+        ToastPlacement.push(context, TOAST_WIDTH, TOAST_HEIGHT);
+
         boolean album = Theme.usesAlbumColor();
         int albumLabel = cover.shouldUseDarkUI ? CommonColors.WHITE : CommonColors.BLACK;
 
@@ -68,5 +71,7 @@ public class SongToast implements Toast {
         SafeDrawer.drawImage(context, cover.getImage(), 0, 0, 0, 0, IMAGE_WIDTH, TOAST_HEIGHT);
 
         if (!album) SafeDrawer.drawOutline(context, 0, 0, TOAST_WIDTH, TOAST_HEIGHT, Theme.accent());
+
+        ToastPlacement.pop(context);
     }
 }

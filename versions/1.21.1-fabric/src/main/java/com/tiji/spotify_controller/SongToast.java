@@ -4,6 +4,7 @@ import com.tiji.spotify_controller.util.ImageWithColor;
 import com.tiji.spotify_controller.util.SafeDrawer;
 import com.tiji.spotify_controller.util.TextUtils;
 import com.tiji.spotify_controller.util.Theme;
+import com.tiji.spotify_controller.util.ToastPlacement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -40,6 +41,8 @@ public class SongToast implements Toast {
     public Visibility render(GuiGraphics context, ToastComponent manager, long timePast) {
         Font textRenderer = Minecraft.getInstance().font;
 
+        ToastPlacement.push(context, TOAST_WIDTH, TOAST_HEIGHT);
+
         boolean album = Theme.usesAlbumColor();
         int albumLabel = cover.shouldUseDarkUI ? CommonColors.WHITE : CommonColors.BLACK;
 
@@ -51,6 +54,8 @@ public class SongToast implements Toast {
         context.blit(cover.getImage(), 0, 0, 0, 0, IMAGE_WIDTH, TOAST_HEIGHT, IMAGE_WIDTH, TOAST_HEIGHT);
 
         if (!album) SafeDrawer.drawOutline(context, 0, 0, TOAST_WIDTH, TOAST_HEIGHT, Theme.accent());
+
+        ToastPlacement.pop(context);
 
         return DISPLAY_DURATION_MS * manager.getNotificationDisplayTimeMultiplier() <= timePast
                 ? Visibility.HIDE
