@@ -1,35 +1,30 @@
-# Automatically build the project and run any configured tests for every push
-# and submitted pull request. This can help catch issues that only occur on
-# certain platforms or Java versions, and provides a first line of defence
-# against bad commits.
+# Builds the 26.3 jar on every push and pull request and uploads it as an artifact.
 
 name: build
 on: [pull_request, push]
 
 jobs:
   build:
-    strategy:
-      matrix:
-        # Use these Java versions
-        java: [
-          21,    # Current Java LTS
-        ]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
-      - name: setup jdk ${{ matrix.java }}
+      # 26.x needs Java 25 for compiling; Gradle itself runs on 21 (listed last, so it is the default)
+      - name: setup jdk 25 and 21
         uses: actions/setup-java@v4
         with:
-          java-version: ${{ matrix.java }}
-          distribution: 'microsoft'
+          java-version: |
+            25
+            21
+          distribution: 'temurin'
       - name: make gradle wrapper executable
         run: chmod +x ./gradlew
-      - name: build
-        run: ./gradlew buildAll
+      - name: build 26.3
+        run: ./gradlew :26.3-fabric:build -Porg.gradle.java.installations.fromEnv=JAVA_HOME_21_X64,JAVA_HOME_25_X64
       - name: capture build artifacts
-        if: ${{ matrix.java == '21' }} # Only upload artifacts built from latest java
         uses: actions/upload-artifact@v4
         with:
-          name: Artifacts
-          path: build/libs/
+          name: spotify-controller-26.3
+          path: |
+            versions/26.3-fabric/build/libs/*.jar
+            !versions/26.3-fabric/build/libs/*-sources.jar
